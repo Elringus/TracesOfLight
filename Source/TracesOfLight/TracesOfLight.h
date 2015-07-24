@@ -25,6 +25,14 @@ FORCEINLINE void LoadLevel(FString levelName)
 	else UE_LOG(TOL, Error, TEXT("LoadLevel failed: can't find active UWorld pointer."));
 }
 
+FORCEINLINE ACharacter* GetMainCharacter()
+{
+	for (TObjectIterator<ACharacter> mc; mc; ++mc)
+		if (mc->IsActorInitialized()) return *mc;
+
+	return nullptr;
+}
+
 FORCEINLINE APlayerController* GetPlayerController(UObject* worldContextObject = nullptr)
 {
 	if (worldContextObject)
