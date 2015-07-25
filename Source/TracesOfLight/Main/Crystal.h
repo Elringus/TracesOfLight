@@ -13,38 +13,48 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Base")
 	class UStaticMeshComponent* BaseMesh;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Base")
+	class USphereComponent* TriggerSphere;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Particles")
+	class UParticleSystem* ExplosionParticles;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Glow")
+	float GlowAmplitude = 1.f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Glow")
+	float SleepGlow = 0.f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Glow")
+	float FloatGlow = 10.f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Glow")
+	float GravityGlow = 15.f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Float")
 	float FloatRadius = 1000.f;
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Float")
 	float FloatSpeed = 3.f;
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Float")
 	float FloatHeight = 100.f;
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Float")
 	float FloatAmlitude = 50.f;
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Float")
 	float FloatRotationSpeed = 2.f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Gravity")
 	float GravityRadius = 500.f;
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Gravity")
 	float GravityForce = 1500.f;
+
+	UFUNCTION()
+	void Consume();
 
 protected:
 	virtual void BeginPlay() override;
 	virtual void Tick(float deltaSeconds) override;
 
-	UFUNCTION()
-	void OnHit(AActor* otherActor, UPrimitiveComponent* otherComp, FVector normalImpulse, const FHitResult& hit);
-
 private:
 	class ACharacter* mainCharacter;
-	FVector sleepPoint; // where this actor will rest on ground.
+	class UMaterialInstanceDynamic* crystalMaterial;
+	FVector sleepPoint; // where this actor will rest on ground
 	
-	FVector GetSleepPoint();
+	FVector GetSleepPoint() const;
 };

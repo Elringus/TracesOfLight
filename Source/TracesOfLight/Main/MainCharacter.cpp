@@ -1,9 +1,11 @@
 #include "TracesOfLight.h"
 #include "MainCharacter.h"
+#include "Crystal.h"
 
 AMainCharacter::AMainCharacter()
 {
-	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.f);
+	GetCapsuleComponent()->InitCapsuleSize(85.f, 50.f);
+	GetCapsuleComponent()->OnComponentBeginOverlap.AddDynamic(this, &AMainCharacter::OnOverlapBegin);
 
 	BaseTurnRate = 45.f;
 	BaseLookUpRate = 45.f;
@@ -25,9 +27,6 @@ AMainCharacter::AMainCharacter()
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
 	FollowCamera->AttachTo(SpringArm, USpringArmComponent::SocketName);
 	FollowCamera->bUsePawnControlRotation = false; 
-
-	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
-	// are set in the derived blueprint asset named MyCharacter (to avoid direct content references in C++)
 }
 
 void AMainCharacter::SetupPlayerInputComponent(class UInputComponent* inputComponent)
@@ -39,13 +38,17 @@ void AMainCharacter::SetupPlayerInputComponent(class UInputComponent* inputCompo
 	inputComponent->BindAxis("MoveForward", this, &AMainCharacter::MoveForward);
 	inputComponent->BindAxis("MoveRight", this, &AMainCharacter::MoveRight);
 
-	// We have 2 versions of the rotation bindings to handle different kinds of devices differently
-	// "turn" handles devices that provide an absolute delta, such as a mouse.
-	// "turnrate" is for devices that we choose to treat as a rate of change, such as an analog joystick
 	inputComponent->BindAxis("Turn", this, &APawn::AddControllerYawInput);
 	inputComponent->BindAxis("TurnRate", this, &AMainCharacter::TurnAtRate);
 	inputComponent->BindAxis("LookUp", this, &APawn::AddControllerPitchInput);
 	inputComponent->BindAxis("LookUpRate", this, &AMainCharacter::LookUpAtRate);
+}
+
+void AMainCharacter::OnOverlapBegin(class AActor* otherActor, class UPrimitiveComponent* otherComp, 
+	int32 otherBodyIndex, bool bFromSweep, const FHitResult& sweepResult)
+{
+	auto crystal = Cast<ACrystal>(otherActor);
+	if (crystal) crystal->Consume();
 }
 
 void AMainCharacter::TurnAtRate(float rate)

@@ -10,16 +10,29 @@ ACrystal::ACrystal()
 	{
 		BaseMesh->bCastDynamicShadow = false;
 		BaseMesh->bAffectDynamicIndirectLighting = true;
-		static FName MeshCollision(TEXT("PhysicsActor"));
-		BaseMesh->SetCollisionProfileName(MeshCollision);
+		BaseMesh->SetCollisionProfileName(TEXT("PhysicsActor"));
 		BaseMesh->SetCollisionResponseToChannel(ECollisionChannel::ECC_Camera, ECollisionResponse::ECR_Ignore);
 		BaseMesh->bShouldUpdatePhysicsVolume = true;
 		BaseMesh->bCanEverAffectNavigation = false;
 		BaseMesh->SetSimulatePhysics(true);
-		BaseMesh->SetNotifyRigidBodyCollision(true);
-		BaseMesh->OnComponentHit.AddDynamic(this, &ACrystal::OnHit);
 		RootComponent = BaseMesh;
 	}
+
+	TriggerSphere = CreateDefaultSubobject<USphereComponent>("TriggerSphere");
+	if (TriggerSphere)
+	{
+		TriggerSphere->SetSphereRadius(50.f);
+		TriggerSphere->bGenerateOverlapEvents = true;
+		TriggerSphere->SetCollisionProfileName(TEXT("OverlapAll"));
+		TriggerSphere->AttachTo(RootComponent);
+	}
+}
+
+void ACrystal::Consume()
+{
+	if (ExplosionParticles)
+		UGameplayStatics::SpawnEmitterAtLocation(this, ExplosionParticles, GetActorLocation());
+	Destroy();
 }
 
 void ACrystal::BeginPlay()
@@ -27,6 +40,7 @@ void ACrystal::BeginPlay()
 	Super::BeginPlay();
 	
 	mainCharacter = GetMainCharacter();
+	crystalMaterial = BaseMesh->CreateAndSetMaterialInstanceDynamic(0);
 }
 
 void ACrystal::Tick(float deltaTime)
@@ -36,6 +50,8 @@ void ACrystal::Tick(float deltaTime)
 	if (mainCharacter)
 	{
 		auto distance = FVector::Dist(mainCharacter->GetActorLocation(), GetActorLocation());
+		float curGlow; 
+		crystalMaterial->GetScalarParameterValue("EmissionPower", curGlow);
 
 		if (distance < GravityRadius)
 		{
@@ -46,6 +62,9 @@ void ACrystal::Tick(float deltaTime)
 			auto forceVector = (mainCharacter->GetActorLocation() - GetActorLocation());
 			forceVector.Normalize();
 			BaseMesh->AddForce(forceVector * GravityForce, NAME_None, true);
+
+			crystalMaterial->SetScalarParameterValue("EmissionPower", 
+				FMath::Lerp(curGlow, GravityGlow, deltaTime));
 		}
 		else if (distance < FloatRadius)
 		{
@@ -58,6 +77,9 @@ void ACrystal::Tick(float deltaTime)
 			SetActorLocation(FMath::Lerp(GetActorLocation(), 
 				sleepPoint + FVector(0, 0, FloatHeight + FMath::Sin(GetWorld()->TimeSeconds) * FloatAmlitude), deltaTime * FloatSpeed));
 			AddActorWorldRotation(FRotator(-10, 5, 7) * FloatRotationSpeed * deltaTime);
+
+			crystalMaterial->SetScalarParameterValue("EmissionPower",
+				FMath::Lerp(curGlow, FloatGlow + FMath::Sin(GetWorld()->TimeSeconds) * GlowAmplitude, deltaTime));
 		}
 		else
 		{
@@ -66,19 +88,15 @@ void ACrystal::Tick(float deltaTime)
 
 			if (sleepPoint.IsZero()) 
 				sleepPoint = GetSleepPoint();
-
 			SetActorLocation(FMath::Lerp(GetActorLocation(), sleepPoint, deltaTime));
+
+			crystalMaterial->SetScalarParameterValue("EmissionPower",
+				FMath::Lerp(curGlow, SleepGlow, deltaTime));
 		}
 	}
 }
 
-void ACrystal::OnHit(AActor* otherActor, UPrimitiveComponent* otherComp, FVector normalImpulse, const FHitResult& hit)
-{
-	if (Cast<ACharacter>(otherActor))
-		this->Destroy();
-}
-
-FVector ACrystal::GetSleepPoint()
+FVector ACrystal::GetSleepPoint() const
 {
 	FHitResult hit(ForceInit);
 	FCollisionQueryParams params;
