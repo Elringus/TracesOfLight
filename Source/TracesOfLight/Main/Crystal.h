@@ -57,4 +57,5 @@ private:
 	FVector sleepPoint; // where this actor will rest on ground
 	
 	FVector GetSleepPoint() const;
+	bool IsCharacterInLOS() const;
 };

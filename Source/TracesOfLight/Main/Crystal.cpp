@@ -53,7 +53,7 @@ void ACrystal::Tick(float deltaTime)
 		float curGlow; 
 		crystalMaterial->GetScalarParameterValue("EmissionPower", curGlow);
 
-		if (distance < GravityRadius)
+		if (IsCharacterInLOS() && distance < GravityRadius)
 		{
 			if (!BaseMesh->IsSimulatingPhysics())
 				BaseMesh->SetSimulatePhysics(true);
@@ -66,7 +66,7 @@ void ACrystal::Tick(float deltaTime)
 			crystalMaterial->SetScalarParameterValue("EmissionPower", 
 				FMath::Lerp(curGlow, GravityGlow, deltaTime));
 		}
-		else if (distance < FloatRadius)
+		else if (IsCharacterInLOS() && distance < FloatRadius)
 		{
 			if (BaseMesh->IsSimulatingPhysics())
 				BaseMesh->SetSimulatePhysics(false);
@@ -104,4 +104,9 @@ FVector ACrystal::GetSleepPoint() const
 	if (GetWorld()->LineTraceSingle(hit, GetActorLocation(), FVector(GetActorLocation().X, GetActorLocation().Y, GetActorLocation().Z - 1000), ECC_WorldStatic, params))
 		return hit.ImpactPoint;
 	else return FVector::ZeroVector;
+}
+
+bool ACrystal::IsCharacterInLOS() const
+{
+	return mainCharacter && mainCharacter->GetController()->LineOfSightTo(this);
 }
