@@ -1,5 +1,6 @@
 #include "TracesOfLight.h"
 #include "Crystal.h"
+#include "LightableComponent.h"
 
 ACrystal::ACrystal()
 {
@@ -26,13 +27,6 @@ ACrystal::ACrystal()
 		TriggerSphere->SetCollisionProfileName(TEXT("OverlapAll"));
 		TriggerSphere->AttachTo(RootComponent);
 	}
-}
-
-void ACrystal::Consume()
-{
-	if (ExplosionParticles)
-		UGameplayStatics::SpawnEmitterAtLocation(this, ExplosionParticles, GetActorLocation());
-	Destroy();
 }
 
 void ACrystal::BeginPlay()
@@ -94,6 +88,20 @@ void ACrystal::Tick(float deltaTime)
 				FMath::Lerp(curGlow, SleepGlow, deltaTime));
 		}
 	}
+}
+
+void ACrystal::Consume()
+{
+	if (ExplosionParticles)
+		UGameplayStatics::SpawnEmitterAtLocation(this, ExplosionParticles, GetActorLocation());
+
+	for (TObjectIterator<ULightableComponent> l; l; ++l)
+	{
+		if (FVector::Dist(GetActorLocation(), l->GetOwner()->GetActorLocation()) < LightActivationRange)
+			l->ActivateLight();
+	}
+
+	Destroy();
 }
 
 FVector ACrystal::GetSleepPoint() const

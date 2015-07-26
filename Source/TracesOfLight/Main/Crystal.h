@@ -44,6 +44,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Gravity")
 	float GravityForce = 1500.f;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Light Activation")
+	float LightActivationRange = 1000.f;
+
 	UFUNCTION()
 	void Consume();
 
