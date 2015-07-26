@@ -19,8 +19,10 @@ public:
 	class UCameraComponent* FollowCamera;
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Particles")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LightPath")
 	class UParticleSystem* LightPath;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LightPath")
+	float LightPathHeight = 10.f;
 
 	/** Base turn rate, in deg/sec. Other scaling may affect final turn rate. */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
@@ -42,5 +44,8 @@ protected:
 
 	UFUNCTION()
 	void OnOverlapBegin(class AActor* otherActor, class UPrimitiveComponent* otherComp, int32 otherBodyIndex, bool bFromSweep, const FHitResult& sweepResult);
+
+	bool LightPathActivated = false;
+	void ActivateLightPath();
 };
 
