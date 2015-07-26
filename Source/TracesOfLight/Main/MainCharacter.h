@@ -19,6 +19,9 @@ public:
 	class UCameraComponent* FollowCamera;
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Particles")
+	class UParticleSystem* LightPath;
+
 	/** Base turn rate, in deg/sec. Other scaling may affect final turn rate. */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
 	float BaseTurnRate;
@@ -27,6 +30,9 @@ public:
 	float BaseLookUpRate;
 
 protected:
+	virtual void BeginPlay() override;
+	virtual void Tick(float deltaSeconds) override;
+
 	void MoveForward(float value);
 	void MoveRight(float value);
 	void TurnAtRate(float rate);

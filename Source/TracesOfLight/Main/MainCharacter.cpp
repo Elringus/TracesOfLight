@@ -44,6 +44,20 @@ void AMainCharacter::SetupPlayerInputComponent(class UInputComponent* inputCompo
 	inputComponent->BindAxis("LookUpRate", this, &AMainCharacter::LookUpAtRate);
 }
 
+void AMainCharacter::BeginPlay()
+{
+	Super::BeginPlay();
+
+	if (LightPath)
+		UGameplayStatics::SpawnEmitterAttached(LightPath, GetRootComponent(), TEXT("LightPath"));
+}
+
+void AMainCharacter::Tick(float deltaTime)
+{
+	Super::Tick(deltaTime);
+
+}
+
 void AMainCharacter::OnOverlapBegin(class AActor* otherActor, class UPrimitiveComponent* otherComp, 
 	int32 otherBodyIndex, bool bFromSweep, const FHitResult& sweepResult)
 {
