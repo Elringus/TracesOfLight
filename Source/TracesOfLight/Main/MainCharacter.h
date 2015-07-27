@@ -31,7 +31,12 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
 	float BaseLookUpRate;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Matinee")
+	bool IsMatineeFlying = false;
+
 protected:
+	class UParticleSystemComponent* LightPathComponent;
+
 	virtual void BeginPlay() override;
 	virtual void Tick(float deltaSeconds) override;
 

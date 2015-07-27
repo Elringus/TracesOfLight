@@ -1,6 +1,7 @@
 #include "TracesOfLight.h"
 #include "MainCharacter.h"
 #include "Crystal.h"
+#include "JumpOffTrigger.h"
 
 AMainCharacter::AMainCharacter()
 {
@@ -101,6 +102,13 @@ void AMainCharacter::OnOverlapBegin(class AActor* otherActor, class UPrimitiveCo
 		crystal->Consume();
 		ActivateLightPath();
 	}
+
+	auto jumpOffTrigger = Cast<AJumpOffTrigger>(otherActor);
+	if (jumpOffTrigger)
+	{
+		LightPathComponent->DestroyComponent();
+		jumpOffTrigger->Play(this);
+	}
 }
 
 void AMainCharacter::ActivateLightPath()
@@ -108,5 +116,5 @@ void AMainCharacter::ActivateLightPath()
 	if (!LightPath || LightPathActivated) return;
 
 	LightPathActivated = true;
-	UGameplayStatics::SpawnEmitterAttached(LightPath, GetRootComponent(), TEXT("LightPath"), FVector(0, 0, LightPathHeight));
+	LightPathComponent = UGameplayStatics::SpawnEmitterAttached(LightPath, GetRootComponent(), TEXT("LightPath"), FVector(0, 0, LightPathHeight));
 }
