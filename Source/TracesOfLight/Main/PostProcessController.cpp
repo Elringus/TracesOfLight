@@ -14,6 +14,12 @@ void APostProcessController::BeginPlay()
 	for (TObjectIterator<APostProcessVolume> volIt; volIt; ++volIt)
 		if (volIt->IsActorInitialized()) PostProcessVolume = *volIt;
 
+	if (!PostProcessVolume)
+	{
+		UE_LOG(TOL, Warning, TEXT("PostProcessController wasn't able to find PostProcessVolume"));
+		return;
+	}
+
 	PostProcessVolume->bUnbound = true;
 
 	PostProcessVolume->Settings.bOverride_LPVIntensity = true;
@@ -44,5 +50,15 @@ void APostProcessController::Tick(float deltaTime)
 {
 	Super::Tick(deltaTime);
 
+}
+
+void APostProcessController::SwitchMenuBlur(bool isBlurOn)
+{
+	if (!PostProcessVolume) return;
+
+	PostProcessVolume->Settings.DepthOfFieldNearTransitionRegion = isBlurOn ? 0 : DepthOfFieldNearTransitionRegion;
+	PostProcessVolume->Settings.DepthOfFieldFarTransitionRegion = isBlurOn ? 0 : DepthOfFieldFarTransitionRegion;
+	PostProcessVolume->Settings.DepthOfFieldNearBlurSize = isBlurOn ? 100 : DepthOfFieldNearBlurSize;
+	PostProcessVolume->Settings.DepthOfFieldFarBlurSize = isBlurOn ? 100 : DepthOfFieldFarBlurSize;
 }
 

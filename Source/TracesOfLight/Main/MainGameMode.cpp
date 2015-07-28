@@ -9,3 +9,10 @@ AMainGameMode::AMainGameMode()
 	if (playerPawnBPClass.Class != NULL)
 		DefaultPawnClass = playerPawnBPClass.Class;
 }
+
+void AMainGameMode::StartPlay()
+{
+	Super::StartPlay();
+	StartMatch();
+
+}

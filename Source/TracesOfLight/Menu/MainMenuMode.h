@@ -1,17 +1,17 @@
 #pragma once
 
 #include "GameFramework/GameMode.h"
-#include "MainGameMode.generated.h"
+#include "MainMenuMode.generated.h"
 
 UCLASS(MinimalAPI)
-class AMainGameMode : public AGameMode
+class AMainMenuMode : public AGameMode
 {
 	GENERATED_BODY()
-
+	
 public:
-	AMainGameMode();
+	AMainMenuMode();
 
 protected:
 	virtual void StartPlay() override;
-
+	
 };

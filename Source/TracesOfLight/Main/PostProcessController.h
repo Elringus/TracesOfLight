@@ -34,6 +34,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera Effects")
 	float DepthOfFieldFarBlurSize = 1.f;
 
+	void SwitchMenuBlur(bool isBlurOn);
+
 protected:
 	class APostProcessVolume* PostProcessVolume;
 

@@ -2,6 +2,7 @@
 #include "EndLevelTrigger.h"
 #include "Matinee/MatineeActor.h"
 #include "MainCharacter.h"
+#include "./GUI/EndLevelWidget.h"
 
 AEndLevelTrigger::AEndLevelTrigger()
 {
@@ -34,8 +35,12 @@ void AEndLevelTrigger::Tick(float deltaTime)
 void AEndLevelTrigger::OnOverlapBegin(class AActor* otherActor, class UPrimitiveComponent* otherComp, 
 	int32 otherBodyIndex, bool bFromSweep, const FHitResult& sweepResult)
 {
-	if (Cast<AMainCharacter>(otherActor)) 
+	if (Cast<AMainCharacter>(otherActor))
+	{
+		GetCameraEffects()->SwitchMenuBlur(true);
+		UEndLevelWidget::Create(GetWorld());
 		ShipMatinee->Play();
+	}
 }
 
 

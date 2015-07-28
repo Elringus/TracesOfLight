@@ -37,6 +37,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Fly")
 	float FlyLerpFactor = 1.f;
 
+	bool IsInputEnabled = true;
+
 	void SetFlying(const FVector target);
 
 protected:

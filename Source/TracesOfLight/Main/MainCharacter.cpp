@@ -72,16 +72,22 @@ void AMainCharacter::SetupPlayerInputComponent(class UInputComponent* inputCompo
 
 void AMainCharacter::TurnAtRate(float rate)
 {
+	if (!IsInputEnabled) return;
+
 	AddControllerYawInput(rate * BaseTurnRate * GetWorld()->GetDeltaSeconds());
 }
 
 void AMainCharacter::LookUpAtRate(float rate)
 {
+	if (!IsInputEnabled) return;
+
 	AddControllerPitchInput(rate * BaseLookUpRate * GetWorld()->GetDeltaSeconds());
 }
 
 void AMainCharacter::MoveForward(float value)
 {
+	if (!IsInputEnabled) return;
+
 	if ((Controller != NULL) && (value != .0f))
 	{
 		const FRotator rotation = Controller->GetControlRotation();
@@ -94,6 +100,8 @@ void AMainCharacter::MoveForward(float value)
 
 void AMainCharacter::MoveRight(float value)
 {
+	if (!IsInputEnabled) return;
+
 	if ((Controller != NULL) && (value != .0f))
 	{
 		const FRotator rotation = Controller->GetControlRotation();
@@ -115,6 +123,9 @@ void AMainCharacter::Tick(float deltaTime)
 {
 	Super::Tick(deltaTime);
 
+	if (GetPlayerController() != NULL)
+		if (GetPlayerController()->WasInputKeyJustPressed(EKeys::Escape))
+			LoadLevel(TEXT("MainMenu"));
 }
 
 void AMainCharacter::OnOverlapBegin(class AActor* otherActor, class UPrimitiveComponent* otherComp, 

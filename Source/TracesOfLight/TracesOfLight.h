@@ -1,6 +1,8 @@
 #pragma once
 
 #include "Engine.h"
+#include "Main/MainCharacter.h"
+#include "Main/PostProcessController.h"
 
 #define Print(text) if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::White, text)
 
@@ -25,9 +27,9 @@ FORCEINLINE void LoadLevel(FString levelName)
 	else UE_LOG(TOL, Error, TEXT("LoadLevel failed: can't find active UWorld pointer."));
 }
 
-FORCEINLINE ACharacter* GetMainCharacter()
+FORCEINLINE AMainCharacter* GetMainCharacter()
 {
-	for (TObjectIterator<ACharacter> mc; mc; ++mc)
+	for (TObjectIterator<AMainCharacter> mc; mc; ++mc)
 		if (mc->IsActorInitialized()) return *mc;
 
 	return nullptr;
@@ -41,6 +43,14 @@ FORCEINLINE APlayerController* GetPlayerController(UObject* worldContextObject =
 	// Works only for single-world cases. Not usable for multiplayer projects.
 	for (TObjectIterator<APlayerController> pc; pc; ++pc)
 		if (pc->IsActorInitialized()) return *pc;
+
+	return nullptr;
+}
+
+FORCEINLINE APostProcessController* GetCameraEffects()
+{
+	for (TObjectIterator<APostProcessController> mc; mc; ++mc)
+		if (mc->IsActorInitialized()) return *mc;
 
 	return nullptr;
 }
