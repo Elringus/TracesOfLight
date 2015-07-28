@@ -20,6 +20,10 @@ public:
 	class AMatineeActor* LowerGangwayMatinee;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "OnTriggerEvents")
 	class ABlockingVolume* GangwayBlock;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "OnTriggerEvents")
+	class UAudioComponent* HornSound;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "OnTriggerEvents")
+	float HornSoundStartDelay = 13.f;
 
 	void Play(class AMainCharacter* character);
 
@@ -32,4 +36,6 @@ protected:
 	UFUNCTION()
 	void OnOverlapBegin(class AActor* otherActor, class UPrimitiveComponent* otherComp, int32 otherBodyIndex, bool bFromSweep, const FHitResult& sweepResult);
 
+	UFUNCTION() 
+	void PlayHornSound();
 };

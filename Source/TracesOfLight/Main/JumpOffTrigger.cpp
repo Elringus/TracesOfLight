@@ -17,6 +17,14 @@ AJumpOffTrigger::AJumpOffTrigger()
 
 		TriggerSphere->OnComponentBeginOverlap.AddDynamic(this, &AJumpOffTrigger::OnOverlapBegin);
 	}
+
+	HornSound = CreateDefaultSubobject<UAudioComponent>("HornSound");
+	if (HornSound)
+	{
+		HornSound->bStopWhenOwnerDestroyed = false;
+		HornSound->bAutoActivate = false;
+		HornSound->AttachTo(RootComponent);
+	}
 }
 
 void AJumpOffTrigger::BeginPlay()
@@ -56,6 +64,12 @@ void AJumpOffTrigger::Play(AMainCharacter* character)
 
 	if (GangwayBlock)
 		GangwayBlock->Destroy();
+
+	if (HornSound)
+	{
+		FTimerHandle hornTimerHandle;
+		GetWorldTimerManager().SetTimer(hornTimerHandle, this, &AJumpOffTrigger::PlayHornSound, HornSoundStartDelay, false);
+	}
 }
 
 void AJumpOffTrigger::OnOverlapBegin(class AActor* otherActor, class UPrimitiveComponent* otherComp, 
@@ -64,3 +78,7 @@ void AJumpOffTrigger::OnOverlapBegin(class AActor* otherActor, class UPrimitiveC
 	Play(Cast<AMainCharacter>(otherActor));
 }
 
+void AJumpOffTrigger::PlayHornSound()
+{
+	if (HornSound) HornSound->Play();
+}

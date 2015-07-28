@@ -1,10 +1,8 @@
 #include "TracesOfLight.h"
-#include "EndLevelTrigger.h"
-#include "Matinee/MatineeActor.h"
+#include "SoundTrigger.h"
 #include "MainCharacter.h"
-#include "./GUI/EndLevelWidget.h"
 
-AEndLevelTrigger::AEndLevelTrigger()
+ASoundTrigger::ASoundTrigger()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
@@ -16,31 +14,36 @@ AEndLevelTrigger::AEndLevelTrigger()
 		TriggerSphere->SetCollisionProfileName(TEXT("OverlapAll"));
 		RootComponent = TriggerSphere;
 
-		TriggerSphere->OnComponentBeginOverlap.AddDynamic(this, &AEndLevelTrigger::OnOverlapBegin);
+		TriggerSphere->OnComponentBeginOverlap.AddDynamic(this, &ASoundTrigger::OnOverlapBegin);
+	}
+
+	Sound = CreateDefaultSubobject<UAudioComponent>("Sound");
+	if (Sound)
+	{
+		Sound->bStopWhenOwnerDestroyed = false;
+		Sound->bAutoActivate = false;
+		Sound->AttachTo(RootComponent);
 	}
 }
 
-void AEndLevelTrigger::BeginPlay()
+void ASoundTrigger::BeginPlay()
 {
 	Super::BeginPlay();
 	
 }
 
-void AEndLevelTrigger::Tick(float deltaTime)
+void ASoundTrigger::Tick(float deltaTime)
 {
 	Super::Tick(deltaTime);
 
 }
 
-void AEndLevelTrigger::OnOverlapBegin(class AActor* otherActor, class UPrimitiveComponent* otherComp, 
+void ASoundTrigger::OnOverlapBegin(class AActor* otherActor, class UPrimitiveComponent* otherComp, 
 	int32 otherBodyIndex, bool bFromSweep, const FHitResult& sweepResult)
 {
 	if (Cast<AMainCharacter>(otherActor))
 	{
-		GetCameraEffects()->SwitchMenuBlur(true);
-		UEndLevelWidget::Create(GetWorld());
-		if (ShipMatinee) ShipMatinee->Play();
+		if (Sound) Sound->Play();
+		Destroy();
 	}
 }
-
-

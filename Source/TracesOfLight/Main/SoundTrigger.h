@@ -1,23 +1,20 @@
 #pragma once
 
 #include "GameFramework/Actor.h"
-#include "EndLevelTrigger.generated.h"
+#include "SoundTrigger.generated.h"
 
 UCLASS()
-class TRACESOFLIGHT_API AEndLevelTrigger : public AActor
+class TRACESOFLIGHT_API ASoundTrigger : public AActor
 {
 	GENERATED_BODY()
 	
 public:	
-	AEndLevelTrigger();
+	ASoundTrigger();
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Base")
 	class USphereComponent* TriggerSphere;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Base")
 	class UAudioComponent* Sound;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "OnTriggerEvents")
-	class AMatineeActor* ShipMatinee;
 
 protected:
 	virtual void BeginPlay() override;
@@ -25,4 +22,5 @@ protected:
 
 	UFUNCTION()
 	void OnOverlapBegin(class AActor* otherActor, class UPrimitiveComponent* otherComp, int32 otherBodyIndex, bool bFromSweep, const FHitResult& sweepResult);
+	
 };

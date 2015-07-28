@@ -27,6 +27,14 @@ ACrystal::ACrystal()
 		TriggerSphere->SetCollisionProfileName(TEXT("OverlapAll"));
 		TriggerSphere->AttachTo(RootComponent);
 	}
+
+	ConsumeSound = CreateDefaultSubobject<UAudioComponent>("ConsumeSound");
+	if (ConsumeSound)
+	{
+		ConsumeSound->bStopWhenOwnerDestroyed = false;
+		ConsumeSound->bAutoActivate = false;
+		ConsumeSound->AttachTo(RootComponent);
+	}
 }
 
 void ACrystal::BeginPlay()
@@ -100,6 +108,8 @@ void ACrystal::Consume()
 		if (FVector::Dist(GetActorLocation(), l->GetOwner()->GetActorLocation()) < LightActivationRange)
 			l->ActivateLight();
 	}
+
+	if (ConsumeSound) ConsumeSound->Play();
 
 	Destroy();
 }

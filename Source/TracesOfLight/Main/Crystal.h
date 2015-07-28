@@ -15,6 +15,8 @@ public:
 	class UStaticMeshComponent* BaseMesh;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Base")
 	class USphereComponent* TriggerSphere;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Base")
+	class UAudioComponent* ConsumeSound;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Particles")
 	class UParticleSystem* ExplosionParticles;
