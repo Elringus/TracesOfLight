@@ -32,8 +32,12 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
 	float BaseLookUpRate;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Matinee")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Fly")
 	bool IsMatineeFlying = false;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Fly")
+	float FlyLerpFactor = 1.f;
+
+	void SetFlying(const FVector target);
 
 protected:
 	virtual void BeginPlay() override;

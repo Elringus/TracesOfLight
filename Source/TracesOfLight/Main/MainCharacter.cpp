@@ -29,6 +29,31 @@ AMainCharacter::AMainCharacter()
 	FollowCamera->bUsePawnControlRotation = false; 
 }
 
+void AMainCharacter::SetFlying(const FVector target)
+{
+	bool isFlying = !target.IsZero();
+
+	IsMatineeFlying = isFlying;
+	GetCapsuleComponent()->SetSimulatePhysics(isFlying);
+	GetCapsuleComponent()->SetEnableGravity(!isFlying);
+	GetCapsuleComponent()->SetPhysicsAngularVelocity(FVector::ZeroVector);
+	GetCapsuleComponent()->SetPhysicsLinearVelocity(FVector::ZeroVector);
+
+	if (!isFlying)
+	{
+		SetActorRotation(FRotator(0, GetActorRotation().Yaw, 0));
+		return;
+	}
+
+	auto lookAtDirection = (target - GetActorLocation());
+	lookAtDirection.Normalize();
+	auto lookAtRotation = FRotationMatrix::MakeFromX(lookAtDirection).Rotator();
+	SetActorRotation(lookAtRotation);
+
+	auto distance = FVector::Dist(GetActorLocation(), target);
+	SetActorLocation(FMath::Lerp(GetActorLocation(), target, GetWorld()->GetDeltaSeconds() * FlyLerpFactor));
+}
+
 #pragma region INPUT
 void AMainCharacter::SetupPlayerInputComponent(class UInputComponent* inputComponent)
 {

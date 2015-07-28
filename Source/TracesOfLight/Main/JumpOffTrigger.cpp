@@ -29,15 +29,11 @@ void AJumpOffTrigger::Tick(float deltaTime)
 {
 	Super::Tick(deltaTime);
 
-	if (JumpOffMatinee->bIsPlaying && AttachedCharacter)
-	{
-		AttachedCharacter->SetActorLocation(GetActorLocation());
-		AttachedCharacter->SetActorRotation(GetActorRotation());
-		AttachedCharacter->IsMatineeFlying = true;
-	}
+	if (JumpOffMatinee && JumpOffMatinee->bIsPlaying && AttachedCharacter)
+		AttachedCharacter->SetFlying(GetActorLocation());
 	else if (AttachedCharacter)
 	{
-		AttachedCharacter->IsMatineeFlying = false;
+		AttachedCharacter->SetFlying(FVector::ZeroVector);
 		AttachedCharacter = nullptr;
 	}
 }
