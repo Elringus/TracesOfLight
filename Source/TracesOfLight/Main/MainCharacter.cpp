@@ -1,7 +1,6 @@
 #include "TracesOfLight.h"
 #include "MainCharacter.h"
 #include "Crystal.h"
-#include "JumpOffTrigger.h"
 
 AMainCharacter::AMainCharacter()
 {
@@ -101,13 +100,6 @@ void AMainCharacter::OnOverlapBegin(class AActor* otherActor, class UPrimitiveCo
 	{
 		crystal->Consume();
 		ActivateLightPath();
-	}
-
-	auto jumpOffTrigger = Cast<AJumpOffTrigger>(otherActor);
-	if (jumpOffTrigger)
-	{
-		LightPathComponent->DestroyComponent();
-		jumpOffTrigger->Play(this);
 	}
 }
 

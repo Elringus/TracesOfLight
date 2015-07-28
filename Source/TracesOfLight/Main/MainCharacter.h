@@ -21,6 +21,7 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LightPath")
 	class UParticleSystem* LightPath;
+	class UParticleSystemComponent* LightPathComponent;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LightPath")
 	float LightPathHeight = 10.f;
 
@@ -35,8 +36,6 @@ public:
 	bool IsMatineeFlying = false;
 
 protected:
-	class UParticleSystemComponent* LightPathComponent;
-
 	virtual void BeginPlay() override;
 	virtual void Tick(float deltaSeconds) override;
 

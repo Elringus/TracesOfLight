@@ -14,8 +14,12 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Base")
 	class USphereComponent* TriggerSphere;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Matinee")
-	class AMatineeActor* Matinee;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "OnTriggerEvents")
+	class AMatineeActor* JumpOffMatinee;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "OnTriggerEvents")
+	class AMatineeActor* LowerGangwayMatinee;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "OnTriggerEvents")
+	class ABlockingVolume* GangwayBlock;
 
 	void Play(class AMainCharacter* character);
 
@@ -24,5 +28,8 @@ protected:
 
 	virtual void BeginPlay() override;
 	virtual void Tick(float deltaSeconds) override;
+
+	UFUNCTION()
+	void OnOverlapBegin(class AActor* otherActor, class UPrimitiveComponent* otherComp, int32 otherBodyIndex, bool bFromSweep, const FHitResult& sweepResult);
 
 };

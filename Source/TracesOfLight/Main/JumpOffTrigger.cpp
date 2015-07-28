@@ -14,15 +14,8 @@ AJumpOffTrigger::AJumpOffTrigger()
 		TriggerSphere->bGenerateOverlapEvents = true;
 		TriggerSphere->SetCollisionProfileName(TEXT("OverlapAll"));
 		RootComponent = TriggerSphere;
-	}
-}
 
-void AJumpOffTrigger::Play(AMainCharacter* character)
-{
-	if (Matinee)
-	{
-		AttachedCharacter = character;
-		Matinee->Play();
+		TriggerSphere->OnComponentBeginOverlap.AddDynamic(this, &AJumpOffTrigger::OnOverlapBegin);
 	}
 }
 
@@ -36,7 +29,7 @@ void AJumpOffTrigger::Tick(float deltaTime)
 {
 	Super::Tick(deltaTime);
 
-	if (Matinee->bIsPlaying && AttachedCharacter)
+	if (JumpOffMatinee->bIsPlaying && AttachedCharacter)
 	{
 		AttachedCharacter->SetActorLocation(GetActorLocation());
 		AttachedCharacter->SetActorRotation(GetActorRotation());
@@ -47,5 +40,31 @@ void AJumpOffTrigger::Tick(float deltaTime)
 		AttachedCharacter->IsMatineeFlying = false;
 		AttachedCharacter = nullptr;
 	}
+}
+
+void AJumpOffTrigger::Play(AMainCharacter* character)
+{
+	if (!character) return;
+
+	if (character->LightPathComponent)
+		character->LightPathComponent->DestroyComponent();
+
+	if (JumpOffMatinee)
+	{
+		AttachedCharacter = character;
+		JumpOffMatinee->Play();
+	}
+
+	if (LowerGangwayMatinee)
+		LowerGangwayMatinee->Play();
+
+	if (GangwayBlock)
+		GangwayBlock->Destroy();
+}
+
+void AJumpOffTrigger::OnOverlapBegin(class AActor* otherActor, class UPrimitiveComponent* otherComp, 
+	int32 otherBodyIndex, bool bFromSweep, const FHitResult& sweepResult)
+{
+	Play(Cast<AMainCharacter>(otherActor));
 }
 
