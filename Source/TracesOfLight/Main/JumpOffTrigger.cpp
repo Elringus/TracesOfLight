@@ -51,7 +51,11 @@ void AJumpOffTrigger::Play(AMainCharacter* character)
 	if (!character) return;
 
 	if (character->LightPathComponent)
-		character->LightPathComponent->DestroyComponent();
+	{
+		LightPath = character->LightPathComponent;
+		FTimerHandle detachLightPathHandle;
+		GetWorldTimerManager().SetTimer(detachLightPathHandle, this, &AJumpOffTrigger::DetachLightPath, DetachLightPathDelay);
+	}
 
 	if (JumpOffMatinee)
 	{
@@ -81,4 +85,10 @@ void AJumpOffTrigger::OnOverlapBegin(class AActor* otherActor, class UPrimitiveC
 void AJumpOffTrigger::PlayHornSound()
 {
 	if (HornSound) HornSound->Play();
+}
+
+void AJumpOffTrigger::DetachLightPath()
+{
+	if (LightPath)
+		LightPath->DetachFromParent(true);
 }

@@ -24,11 +24,14 @@ public:
 	class UAudioComponent* HornSound;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "OnTriggerEvents")
 	float HornSoundStartDelay = 13.f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "OnTriggerEvents")
+	float DetachLightPathDelay = 10.f;
 
 	void Play(class AMainCharacter* character);
 
 protected:
 	class AMainCharacter* AttachedCharacter;
+	class UParticleSystemComponent* LightPath;
 
 	virtual void BeginPlay() override;
 	virtual void Tick(float deltaSeconds) override;
@@ -38,4 +41,6 @@ protected:
 
 	UFUNCTION() 
 	void PlayHornSound();
+	UFUNCTION()
+	void DetachLightPath();
 };
