@@ -43,6 +43,7 @@ void ACrystal::BeginPlay()
 	
 	mainCharacter = GetMainCharacter();
 	crystalMaterial = BaseMesh->CreateAndSetMaterialInstanceDynamic(0);
+	initialPoint = GetActorLocation();
 }
 
 void ACrystal::Tick(float deltaTime)
@@ -116,6 +117,8 @@ void ACrystal::Consume()
 
 FVector ACrystal::GetSleepPoint() const
 {
+	if (!IsSleepingOnGround) return initialPoint;
+
 	FHitResult hit(ForceInit);
 	FCollisionQueryParams params;
 	params.AddIgnoredActor(this);

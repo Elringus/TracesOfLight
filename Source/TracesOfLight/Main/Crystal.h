@@ -31,6 +31,8 @@ public:
 	float GravityGlow = 15.f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Float")
+	bool IsSleepingOnGround = true;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Float")
 	float FloatRadius = 1000.f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Float")
 	float FloatSpeed = 3.f;
@@ -59,6 +61,7 @@ protected:
 private:
 	class ACharacter* mainCharacter;
 	class UMaterialInstanceDynamic* crystalMaterial;
+	FVector initialPoint;
 	FVector sleepPoint; // where this actor will rest on ground
 	
 	FVector GetSleepPoint() const;
