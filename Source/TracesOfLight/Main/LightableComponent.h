@@ -19,6 +19,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Light")
 	float ActivationTime = 1.f;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Matinee")
+	class AMatineeActor* Matinee;
+
 	virtual void BeginPlay() override;
 	virtual void TickComponent(float deltaTime, ELevelTick tickType, FActorComponentTickFunction* thisTickFunction) override;
 

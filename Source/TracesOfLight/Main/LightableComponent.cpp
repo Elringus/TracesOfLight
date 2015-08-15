@@ -1,5 +1,6 @@
 #include "TracesOfLight.h"
 #include "LightableComponent.h"
+#include "Matinee/MatineeActor.h"
 
 ULightableComponent::ULightableComponent()
 {
@@ -56,4 +57,6 @@ void ULightableComponent::TickComponent(float deltaTime, ELevelTick tickType, FA
 void ULightableComponent::ActivateLight()
 {
 	IsLightActivated = true;
+
+	if (Matinee) Matinee->Play();
 }
