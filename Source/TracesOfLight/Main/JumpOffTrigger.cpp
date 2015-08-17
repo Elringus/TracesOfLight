@@ -37,7 +37,7 @@ void AJumpOffTrigger::Tick(float deltaTime)
 {
 	Super::Tick(deltaTime);
 
-	if (JumpOffMatinee && JumpOffMatinee->bIsPlaying && AttachedCharacter)
+	if (JumpOffMatinee && JumpOffMatinee->bIsPlaying && JumpOffMatinee->InterpPosition < 9.75f && AttachedCharacter)
 		AttachedCharacter->SetFlying(GetActorLocation());
 	else if (AttachedCharacter)
 	{
